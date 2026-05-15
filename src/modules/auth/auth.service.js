@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import User from "../../models/user.model";
+import User from "../../models/user.model.js";
 
 export const registerUser = async ({ name, email, password }) => {
   const existingUser = await User.findOne({ email });
