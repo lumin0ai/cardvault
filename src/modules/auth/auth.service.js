@@ -7,7 +7,7 @@ export const registerUser = async ({ name, email, password }) => {
     throw new Error("User already exist");
   }
   const hashedPassword = await bcrypt.hash(password, 6);
-  const user = User.create({
+  const user = await User.create({
     name,
     email,
     password: hashedPassword,
@@ -16,7 +16,7 @@ export const registerUser = async ({ name, email, password }) => {
 };
 
 export const loginUser = async ({ email, password }) => {
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+password");
   if (!user) {
     throw new Error("Invalid credentials");
   }
