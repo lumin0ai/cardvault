@@ -25,5 +25,17 @@ const folderSchema = new mongoose.Schema(
   },
 );
 
+folderSchema.pre("findOneAndDelete", async function (next) {
+  const folder = await this.model.findOne(this.getFilter());
+
+  if (folder) {
+    await mongoose.model("Contact").deleteMany({
+      folderId: folder._id,
+    });
+  }
+
+  next();
+});
+
 const Folder = mongoose.model("Folder", folderSchema);
 export default Folder;
