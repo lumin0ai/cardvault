@@ -34,7 +34,7 @@ export const login = async (req, res) => {
     const refreshToken = generateRefreshToken(user._id);
 
     res.status(200).json({
-      message: "Login successful",
+      message: "Login successfully",
       accessToken,
       refreshToken,
       user: {
