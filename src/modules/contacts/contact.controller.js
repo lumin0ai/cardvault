@@ -7,8 +7,21 @@ import {
 
 export const createContact = async (req, res) => {
   try {
-    const contact = await createContactService(req.user._id, req.body);
+    let frontImageUrl = "";
+    let backImageUrl = "";
+    if (req.files && req.files.frontImage) {
+      frontImageUrl = `${req.protocol}://${req.get("host")}/uploads/cards/${req.files.frontImage[0].filename}`;
+    }
+    if (req.files && req.files.backImage) {
+      backImageUrl = `${req.protocol}://${req.get("host")}/uploads/cards/${req.files.backImage[0].filename}`;
+    }
+    const contact = await createContactService(req.user._id, {
+      ...req.body,
+      frontImageUrl,
+      backImageUrl,
+    });
     res.status(201).json({
+      message: "Contact created",
       contact,
     });
   } catch (error) {

@@ -4,6 +4,12 @@ import authRoutes from "./src/modules/auth/auth.routes.js";
 import cookieParser from "cookie-parser";
 import folderRoutes from "./src/modules/folders/folder.routes.js";
 import contactRoutes from "./src/modules/contacts/contact.routes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsDir = path.resolve(__dirname, "uploads");
 
 const app = express();
 app.use(cors());
@@ -17,4 +23,5 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/folders", folderRoutes);
 app.use("/api/contacts", contactRoutes);
+app.use("/uploads", express.static(uploadsDir));
 export default app;
