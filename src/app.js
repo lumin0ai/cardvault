@@ -9,4 +9,4 @@ app.get("/", (req, res) => {
   res.send("api running");
 });
 
-module.exports = app;
+export default app;
