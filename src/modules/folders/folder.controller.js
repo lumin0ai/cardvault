@@ -1,3 +1,4 @@
+import asyncHandler from "../../utils/asyncHandler.js";
 import {
   createFolderService,
   getFoldersService,
@@ -5,50 +6,28 @@ import {
   deleteFolderService,
 } from "./folder.service.js";
 
-export const createFolder = async (req, res) => {
-  try {
-    const folder = await createFolderService(req.user._id, req.body);
-    res.status(201).json(folder);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+export const createFolder = asyncHandler(async (req, res) => {
+  const folder = await createFolderService(req.user._id, req.body);
+  res.status(201).json(folder);
+});
 
-export const getFolders = async (req, res) => {
-  try {
-    const folders = await getFoldersService(req.user._id);
-    res.status(200).json(folders);
-  } catch (error) {
-    res.status(400).json({
-      message: error.message,
-    });
-  }
-};
+export const getFolders = asyncHandler(async (req, res) => {
+  const folders = await getFoldersService(req.user._id);
+  res.status(200).json(folders);
+});
 
-export const updateFolder = async (req, res) => {
-  try {
-    const folder = await updateFolderService(
-      req.params.id,
-      req.user._id,
-      req.body,
-    );
-    res.status(200).json(folder);
-  } catch (error) {
-    res.status(400).json({
-      message: error.message,
-    });
-  }
-};
+export const updateFolder = asyncHandler(async (req, res) => {
+  const folder = await updateFolderService(
+    req.params.id,
+    req.user._id,
+    req.body,
+  );
+  res.status(200).json(folder);
+});
 
-export const deleteFolder = async (req, res) => {
-  try {
-    await deleteFolderService(req.params.id, req.user._id);
-    res.status(200).json({
-      message: "Folder deleted",
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: error.message,
-    });
-  }
-};
+export const deleteFolder = asyncHandler(async (req, res) => {
+  await deleteFolderService(req.params.id, req.user._id);
+  res.status(200).json({
+    message: "Folder deleted",
+  });
+});
