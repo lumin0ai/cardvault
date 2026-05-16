@@ -1,3 +1,4 @@
+import asyncHandler from "../../utils/asyncHandler.js";
 import {
   createContactService,
   getContactsService,
@@ -5,31 +6,51 @@ import {
   deleteContactService,
 } from "./contact.service.js";
 
-export const createContact = async (req, res) => {
-  try {
-    let frontImageUrl = "";
-    let backImageUrl = "";
-    if (req.files && req.files.frontImage) {
-      frontImageUrl = `${req.protocol}://${req.get("host")}/uploads/cards/${req.files.frontImage[0].filename}`;
-    }
-    if (req.files && req.files.backImage) {
-      backImageUrl = `${req.protocol}://${req.get("host")}/uploads/cards/${req.files.backImage[0].filename}`;
-    }
-    const contact = await createContactService(req.user._id, {
-      ...req.body,
-      frontImageUrl,
-      backImageUrl,
-    });
-    res.status(201).json({
-      message: "Contact created",
-      contact,
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: error.message,
-    });
+export const createContact = asyncHandler(async (req, res) => {
+  let frontImageUrl = "";
+  let backImageUrl = "";
+  if (req.files && req.files.frontImage) {
+    frontImageUrl = `${req.protocol}://${req.get("host")}/uploads/cards/${req.files.frontImage[0].filename}`;
   }
-};
+  if (req.files && req.files.backImage) {
+    backImageUrl = `${req.protocol}://${req.get("host")}/uploads/cards/${req.files.backImage[0].filename}`;
+  }
+  const contact = await createContactService(req.user._id, {
+    ...req.body,
+    frontImageUrl,
+    backImageUrl,
+  });
+  res.status(201).json({
+    message: "Contact created",
+    contact,
+  });
+});
+
+// async (req, res) => {
+//   try {
+//     let frontImageUrl = "";
+//     let backImageUrl = "";
+//     if (req.files && req.files.frontImage) {
+//       frontImageUrl = `${req.protocol}://${req.get("host")}/uploads/cards/${req.files.frontImage[0].filename}`;
+//     }
+//     if (req.files && req.files.backImage) {
+//       backImageUrl = `${req.protocol}://${req.get("host")}/uploads/cards/${req.files.backImage[0].filename}`;
+//     }
+//     const contact = await createContactService(req.user._id, {
+//       ...req.body,
+//       frontImageUrl,
+//       backImageUrl,
+//     });
+//     res.status(201).json({
+//       message: "Contact created",
+//       contact,
+//     });
+//   } catch (error) {
+//     res.status(400).json({
+//       message: error.message,
+//     });
+//   }
+// };
 
 export const getContacts = async (req, res) => {
   try {

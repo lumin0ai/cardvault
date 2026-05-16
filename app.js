@@ -33,8 +33,9 @@ app.use(limiter);
 
 app.use((req, res, next) => {
   req.body = mongoSanitize(req.body);
-  req.query = mongoSanitize(req.query);
+
   req.params = mongoSanitize(req.params);
+
   next();
 });
 

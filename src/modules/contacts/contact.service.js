@@ -1,5 +1,6 @@
 import Contact from "./contact.model.js";
 import { deleteFile } from "../../utils/file.utils.js";
+import ApiError from "../../utils/ApiError.js";
 
 export const createContactService = async (userId, data) => {
   return await Contact.create({ userId, ...data });
@@ -70,7 +71,7 @@ export const deleteContactService = async (contactId, userId) => {
   });
 
   if (!contact) {
-    throw new Error("Contact not found");
+    throw new ApiError(404, "Contact not found");
   }
 
   deleteFile(contact.frontImageUrl);

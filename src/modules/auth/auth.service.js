@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
 import User from "../../models/user.model.js";
+import ApiError from "../../utils/ApiError.js";
 
 export const registerUser = async ({ name, email, password }) => {
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    throw new Error("User already exist");
+    throw new ApiError(401, "User already exist");
   }
   const hashedPassword = await bcrypt.hash(password, 6);
   const user = await User.create({
@@ -18,11 +19,11 @@ export const registerUser = async ({ name, email, password }) => {
 export const loginUser = async ({ email, password }) => {
   const user = await User.findOne({ email }).select("+password");
   if (!user) {
-    throw new Error("Invalid credentials");
+    throw new ApiError(401, "Invalid credentials");
   }
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    throw new Error("Invalid credentials");
+    throw new ApiError(401, "Invalid credentials");
   }
   return user;
 };
