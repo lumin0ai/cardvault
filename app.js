@@ -7,11 +7,11 @@ import contactRoutes from "./src/modules/contacts/contact.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import exportRoutes from "./src/modules/export/export.routes.js";
-import upload from "./src/middleware/upload.middleware.js";
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-// const uploadsDir = path.resolve(__dirname, "uploads");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsDir = path.resolve(__dirname, "uploads");
+const exportsDir = path.resolve(__dirname, "exports");
 
 const app = express();
 app.use(cors());
@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/folders", folderRoutes);
 app.use("/api/contacts", contactRoutes);
-app.use("/uploads", upload);
+app.use("/uploads", express.static(uploadsDir));
+app.use("/exports", express.static(exportsDir));
 app.use("/api/export", exportRoutes);
 export default app;
