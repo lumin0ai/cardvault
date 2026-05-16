@@ -1,4 +1,4 @@
-import { registerUser, loginUser } from "./auth.service.js";
+import { registerUser, loginUser, refreshAccessTokenService } from "./auth.service.js";
 import {
   generateAccessToken,
   generateRefreshToken,

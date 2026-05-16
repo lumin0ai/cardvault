@@ -67,6 +67,25 @@ Authenticate an existing user.
 }
 ```
 
+### Refresh Access Token
+Get a new access token using a refresh token.
+
+- **Method:** `POST`
+- **URL:** `/api/auth/refresh-token`
+- **Body (JSON):**
+```json
+{
+  "refreshToken": "ey..."
+}
+```
+- **Response (200 OK):**
+```json
+{
+  "success": true,
+  "accessToken": "ey..."
+}
+```
+
 ### Get Current User Profile
 Retrieve the authenticated user's information.
 
