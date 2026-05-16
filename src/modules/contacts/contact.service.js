@@ -1,4 +1,5 @@
 import Contact from "./contact.model.js";
+import { deleteFile } from "../../utils/file.utils.js";
 
 export const createContactService = async (userId, data) => {
   return await Contact.create({ userId, ...data });
@@ -63,8 +64,18 @@ export const updateContactService = async (contactId, userId, data) => {
 };
 
 export const deleteContactService = async (contactId, userId) => {
-  return await Contact.findOneAndDelete({
+  const contact = await Contact.findOne({
     _id: contactId,
     userId,
   });
+
+  if (!contact) {
+    throw new Error("Contact not found");
+  }
+
+  deleteFile(contact.frontImageUrl);
+
+  deleteFile(contact.backImageUrl);
+
+  await contact.deleteOne();
 };

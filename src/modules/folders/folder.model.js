@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import Contact from "../contacts/contact.model.js";
+import { deleteFile } from "../../utils/file.utils.js";
 
 const folderSchema = new mongoose.Schema(
   {
@@ -25,16 +27,23 @@ const folderSchema = new mongoose.Schema(
   },
 );
 
-folderSchema.pre("findOneAndDelete", async function (next) {
+folderSchema.pre("findOneAndDelete", async function () {
   const folder = await this.model.findOne(this.getFilter());
 
   if (folder) {
-    await mongoose.model("Contact").deleteMany({
+    const contacts = await Contact.find({
+      folderId: folder._id,
+    });
+
+    contacts.forEach((contact) => {
+      deleteFile(contact.frontImageUrl);
+      deleteFile(contact.backImageUrl);
+    });
+
+    await Contact.deleteMany({
       folderId: folder._id,
     });
   }
-
-  next();
 });
 
 const Folder = mongoose.model("Folder", folderSchema);
