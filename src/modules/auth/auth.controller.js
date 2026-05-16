@@ -22,29 +22,6 @@ export const register = asyncHandler(async (req, res) => {
   });
 });
 
-// async (req, res) => {
-//   try {
-//     const user = await registerUser(req.body);
-//     const accessToken = generateAccessToken(user._id);
-//     const refreshToken = generateRefreshToken(user._id);
-
-//     res.status(201).json({
-//       message: "User registered successfully",
-//       accessToken,
-//       refreshToken,
-//       user: {
-//         id: user._id,
-//         name: user.name,
-//         email: user.email,
-//       },
-//     });
-//   } catch (error) {
-//     res.status(400).json({
-//       message: error.message,
-//     });
-//   }
-// };
-
 export const login = asyncHandler(async (req, res) => {
   const user = await loginUser(req.body);
   const accessToken = generateAccessToken(user._id);
@@ -70,15 +47,6 @@ export const login = asyncHandler(async (req, res) => {
     },
   });
 });
-
-// async (req, res) => {
-//   try {
-//   } catch (error) {
-//     res.status(400).json({
-//       message: error.message,
-//     });
-//   }
-// };
 
 export const getMe = async (req, res) => {
   res.status(200).json(req.user);
