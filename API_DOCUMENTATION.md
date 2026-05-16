@@ -130,20 +130,29 @@ Base Prefix: `/api/folders`
 ```
 
 ### List Folders
-Retrieve all folders created by the user.
+Retrieve folders created by the user with pagination support.
 
 - **Method:** `GET`
 - **URL:** `/api/folders`
+- **Query Parameters:**
+  - `page` (optional, default: 1): The page number.
+  - `limit` (optional, default: 10): Number of folders per page.
 - **Response (200 OK):**
 ```json
-[
-  {
-    "_id": "60e...",
-    "name": "Tech Networking",
-    "description": "Contacts from tech conferences",
-    "createdAt": "2023-10-02T10:00:00Z"
-  }
-]
+{
+  "folders": [
+    {
+      "_id": "60e...",
+      "name": "Tech Networking",
+      "description": "Contacts from tech conferences",
+      "contactsCount": 5,
+      "createdAt": "2023-10-02T10:00:00Z"
+    }
+  ],
+  "totalFolders": 1,
+  "totalPages": 1,
+  "currentPage": 1
+}
 ```
 
 ### Update Folder

@@ -12,8 +12,9 @@ export const createFolder = asyncHandler(async (req, res) => {
 });
 
 export const getFolders = asyncHandler(async (req, res) => {
-  const folders = await getFoldersService(req.user._id);
-  res.status(200).json(folders);
+  const { page = 1, limit = 10 } = req.query;
+  const result = await getFoldersService(req.user._id, page, limit);
+  res.status(200).json(result);
 });
 
 export const updateFolder = asyncHandler(async (req, res) => {

@@ -8,45 +8,64 @@ export const createFolderService = async (userId, data) => {
   });
 };
 
-export const getFoldersService = async (userId) => {
-  // return await Folder.find({ userId }).sort({
-  //   createdAt: -1,
-  // });
-  return await Folder.aggregate([
+export const getFoldersService = async (userId, page = 1, limit = 10) => {
+  const skip = (Number(page) - 1) * Number(limit);
+  const results = await Folder.aggregate([
     {
       $match: {
-        userId:
-          new mongoose.Types.ObjectId(
-            userId
-          ),
+        userId: new mongoose.Types.ObjectId(userId),
       },
     },
     {
-      $lookup: {
-        from: 'contacts',
-        localField: '_id',
-        foreignField: 'folderId',
-        as: 'contacts'
-      }
-    },
-    {
-      $addFields: {
-        contactsCount: {
-          $size: '$contacts',
-        }
-      }
-    },
-    {
-      $project: {
-        contacts: 0,
-      },
-    },
-    {
-      $sort: {
-        createdAt: -1,
+      $facet: {
+        metadata: [{ $count: "total" }],
+        folders: [
+          {
+            $lookup: {
+              from: "contacts",
+              localField: "_id",
+              foreignField: "folderId",
+              as: "contacts",
+            },
+          },
+          {
+            $addFields: {
+              contactsCount: {
+                $size: "$contacts",
+              },
+            },
+          },
+          {
+            $project: {
+              contacts: 0,
+            },
+          },
+          {
+            $sort: {
+              createdAt: -1,
+            },
+          },
+          {
+            $skip: skip,
+          },
+          {
+            $limit: Number(limit),
+          },
+        ],
       },
     },
   ]);
+
+  const folders = results[0].folders;
+  const totalFolders = results[0].metadata[0]?.total || 0;
+  const totalPages = Math.ceil(totalFolders / Number(limit));
+
+  return {
+    folders,
+    totalFolders,
+    totalPages,
+    currentPage: Number(page),
+  };
 };
 
 export const updateFolderService = async (folderId, userId, data) => {
