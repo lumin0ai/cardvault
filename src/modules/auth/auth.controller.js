@@ -48,6 +48,35 @@ export const login = asyncHandler(async (req, res) => {
   });
 });
 
+export const refreshAccessToken =
+  asyncHandler(async (
+    req,
+    res
+  ) => {
+
+    const { refreshToken } =
+      req.body;
+
+
+    const user =
+      await refreshAccessTokenService(
+        refreshToken
+      );
+
+
+    const accessToken =
+      generateAccessToken(
+        user._id
+      );
+
+
+    res.status(200).json({
+      success: true,
+
+      accessToken,
+    });
+});
+
 export const getMe = async (req, res) => {
   res.status(200).json(req.user);
 };

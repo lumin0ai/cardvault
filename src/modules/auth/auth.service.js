@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../../models/user.model.js";
 import ApiError from "../../utils/ApiError.js";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async ({ name, email, password }) => {
   const existingUser = await User.findOne({ email });
@@ -26,4 +27,31 @@ export const loginUser = async ({ email, password }) => {
     throw new ApiError(401, "Invalid credentials");
   }
   return user;
+};
+
+export const refreshAccessTokenService = async (refreshToken) => {
+    if (!refreshToken) {
+      throw new ApiError(
+        401,
+        "Refresh token missing"
+      );
+    }
+
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET
+    );
+
+
+    const user = await User.findById(
+      decoded.id
+    );
+
+    if (!user) {
+      throw new ApiError(
+        404,
+        "User not found"
+      );
+    }
+    return user;
 };
