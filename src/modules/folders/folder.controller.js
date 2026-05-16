@@ -1,9 +1,11 @@
+import { success } from "zod";
 import asyncHandler from "../../utils/asyncHandler.js";
 import {
   createFolderService,
   getFoldersService,
   updateFolderService,
   deleteFolderService,
+  getFoldersListService
 } from "./folder.service.js";
 
 export const createFolder = asyncHandler(async (req, res) => {
@@ -30,5 +32,13 @@ export const deleteFolder = asyncHandler(async (req, res) => {
   await deleteFolderService(req.params.id, req.user._id);
   res.status(200).json({
     message: "Folder deleted",
+  });
+});
+
+export const getFoldersList = asyncHandler(async (req, res) => {
+  const folders = await getFoldersListService(req.user._id);
+  res.status(200).json({
+    success: true,
+    folders,
   });
 });

@@ -6,11 +6,13 @@ import {
   updateFolder,
   getFolders,
   deleteFolder,
+  getFoldersList
 } from "./folder.controller.js";
 
 const router = express.Router();
 router.use(protect);
 router.post("/", createFolder);
+router.get('/list', getFoldersList);
 router.get("/", getFolders);
 router.patch("/:id", updateFolder);
 router.delete("/:id", deleteFolder);

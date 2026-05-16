@@ -77,3 +77,7 @@ export const updateFolderService = async (folderId, userId, data) => {
 export const deleteFolderService = async (folderId, userId) => {
   return await Folder.findOneAndDelete({ _id: folderId, userId });
 };
+
+export const getFoldersListService = async (userId) => {
+  return await Folder.find({ userId }, { name: 1 }).sort({ createdAt: -1 });
+};
