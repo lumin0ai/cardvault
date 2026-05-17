@@ -8,6 +8,7 @@ import {
   getContacts,
   updateContact,
   deleteContact,
+  getContactsStats
 } from "./contact.controller.js";
 
 const router = express.Router();
@@ -22,6 +23,7 @@ router.post(
   createContact,
 );
 router.get("/", getContacts);
+router.get('/stats', getContactsStats);
 router.patch("/:id", updateContact);
 router.delete("/:id", deleteContact);
 

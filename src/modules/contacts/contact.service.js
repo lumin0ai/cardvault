@@ -80,3 +80,10 @@ export const deleteContactService = async (contactId, userId) => {
 
   await contact.deleteOne();
 };
+
+export const getContactsStatsService = async (userId) => {
+  const totalContacts = await Contact.countDocuments({
+    userId,
+  });
+  return { totalContacts };
+};

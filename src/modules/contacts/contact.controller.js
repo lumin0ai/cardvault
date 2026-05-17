@@ -1,9 +1,11 @@
+import { success } from "zod";
 import asyncHandler from "../../utils/asyncHandler.js";
 import {
   createContactService,
   getContactsService,
   updateContactService,
   deleteContactService,
+  getContactsStatsService
 } from "./contact.service.js";
 
 export const createContact = asyncHandler(async (req, res) => {
@@ -50,5 +52,13 @@ export const deleteContact = asyncHandler(async (req, res) => {
   await deleteContactService(req.params.id, req.user._id);
   res.status(200).json({
     message: "Contact deleted",
+  });
+});
+
+export const getContactsStats = asyncHandler(async (req, res) => {
+  const stats = await getContactsStatsService(req.user._id);
+  res.status(200).json({
+    success: true,
+    ...stats,
   });
 });
