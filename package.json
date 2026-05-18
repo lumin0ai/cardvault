@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "docker:mongo": "docker exec -it cardvault-backend-mongo-1 mongosh",
+    "docker:mongo": "docker compose exec mongo mongosh cardvault-DB",
     "docker:run": "docker compose up --build",
     "docker:stop": "docker compose stop",
     "docker:restart": "docker compose restart",
