@@ -45,9 +45,21 @@ export const refreshAccessTokenService = async (refreshToken) => {
   if (user.refreshToken != refreshToken) {
     throw new ApiError(401, "Invalid refresh token");
   }
+
+  if ((decoded.tokenVersion ?? 0) !== (user.tokenVersion ?? 0)) {
+    throw new ApiError(401, "Refresh token expired after logout");
+  }
+
   return user;
 };
 
 export const logoutService = async (userId) => {
-  await User.findByIdAndUpdate(userId, { refreshToken: null });
+  await User.findByIdAndUpdate(userId, {
+    $set: {
+      refreshToken: null,
+    },
+    $inc: {
+      tokenVersion: 1,
+    },
+  });
 };

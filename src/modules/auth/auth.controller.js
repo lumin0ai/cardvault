@@ -13,8 +13,8 @@ import { success } from "zod";
 
 export const register = asyncHandler(async (req, res) => {
   const user = await registerUser(req.body);
-  const accessToken = generateAccessToken(user._id);
-  const refreshToken = generateRefreshToken(user._id);
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
 
   res.status(201).json({
     message: "User registered successfully",
@@ -30,8 +30,8 @@ export const register = asyncHandler(async (req, res) => {
 
 export const login = asyncHandler(async (req, res) => {
   const user = await loginUser(req.body);
-  const accessToken = generateAccessToken(user._id);
-  const refreshToken = generateRefreshToken(user._id);
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
 
   user.refreshToken = refreshToken;
   await user.save();
@@ -59,7 +59,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
 
   const user = await refreshAccessTokenService(refreshToken);
 
-  const accessToken = generateAccessToken(user._id);
+  const accessToken = generateAccessToken(user);
 
   res.status(200).json({
     success: true,
@@ -74,6 +74,12 @@ export const getMe = async (req, res) => {
 
 export const logout = asyncHandler(async (req, res) => {
   await logoutService(req.user._id);
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+
   res.status(200).json({
     success: true,
     message: "Logged out successfully",
