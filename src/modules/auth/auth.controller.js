@@ -1,9 +1,15 @@
-import { registerUser, loginUser, refreshAccessTokenService } from "./auth.service.js";
+import {
+  registerUser,
+  loginUser,
+  refreshAccessTokenService,
+  logoutService,
+} from "./auth.service.js";
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "../../utils/generateToken.js";
 import asyncHandler from "../../utils/asyncHandler.js";
+import { success } from "zod";
 
 export const register = asyncHandler(async (req, res) => {
   const user = await registerUser(req.body);
@@ -48,35 +54,28 @@ export const login = asyncHandler(async (req, res) => {
   });
 });
 
-export const refreshAccessToken =
-  asyncHandler(async (
-    req,
-    res
-  ) => {
+export const refreshAccessToken = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
 
-    const { refreshToken } =
-      req.body;
+  const user = await refreshAccessTokenService(refreshToken);
 
+  const accessToken = generateAccessToken(user._id);
 
-    const user =
-      await refreshAccessTokenService(
-        refreshToken
-      );
+  res.status(200).json({
+    success: true,
 
-
-    const accessToken =
-      generateAccessToken(
-        user._id
-      );
-
-
-    res.status(200).json({
-      success: true,
-
-      accessToken,
-    });
+    accessToken,
+  });
 });
 
 export const getMe = async (req, res) => {
   res.status(200).json(req.user);
 };
+
+export const logout = asyncHandler(async (req, res) => {
+  await logoutService(req.user._id);
+  res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+});

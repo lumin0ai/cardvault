@@ -30,28 +30,24 @@ export const loginUser = async ({ email, password }) => {
 };
 
 export const refreshAccessTokenService = async (refreshToken) => {
-    if (!refreshToken) {
-      throw new ApiError(
-        401,
-        "Refresh token missing"
-      );
-    }
+  if (!refreshToken) {
+    throw new ApiError(401, "Refresh token missing");
+  }
 
-    const decoded = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET
-    );
+  const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
+  const user = await User.findById(decoded.id);
 
-    const user = await User.findById(
-      decoded.id
-    );
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
 
-    if (!user) {
-      throw new ApiError(
-        404,
-        "User not found"
-      );
-    }
-    return user;
+  if (user.refreshToken != refreshToken) {
+    throw new ApiError(401, "Invalid refresh token");
+  }
+  return user;
+};
+
+export const logoutService = async (userId) => {
+  await User.findByIdAndUpdate(userId, { refreshToken: null });
 };
