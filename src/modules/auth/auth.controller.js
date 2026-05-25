@@ -9,7 +9,6 @@ import {
   generateRefreshToken,
 } from "../../utils/generateToken.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-import { success } from "zod";
 
 export const register = asyncHandler(async (req, res) => {
   const user = await registerUser(req.body);
