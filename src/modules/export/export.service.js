@@ -90,8 +90,19 @@ export const exportFolderService = async (folderId, userId) => {
     });
   });
 
+  // const safeFolderName = folder.name.replace(/\s+/g, "_");
+  // const fileName = `${safeFolderName}_${Date.now()}.xlsx`;
   const safeFolderName = folder.name.replace(/\s+/g, "_");
-  const fileName = `${safeFolderName}_${Date.now()}.xlsx`;
+  const now = new Date();
+  const dateTimeString = now
+    .toISOString()
+    .replace(/[:.]/g, "-")
+    .replace("T", "_")
+    .split("Z")[0];
+
+  const fileName = `${safeFolderName}_${dateTimeString}.xlsx`;
+
+  console.log(fileName);
 
   const filePath = path.join("exports", fileName);
   createDirIfNotExists("exports");
